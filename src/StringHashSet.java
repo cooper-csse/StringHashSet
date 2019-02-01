@@ -17,6 +17,7 @@ public class StringHashSet {
 	private int size;
 	private int capacity;
 	private Node[] array;
+	private int changes;
 
 	/**
 	 * A LinkedList<String> designed for the StringHashSet program
@@ -204,6 +205,7 @@ public class StringHashSet {
 			}
 			this.array[index].add(item);
 			this.size++;
+			this.changes++;
 			return true;
 		}
 		return false;
@@ -290,7 +292,10 @@ public class StringHashSet {
 		if (hash < 0) hash += Integer.MAX_VALUE + 1;
 		int index = hash % this.capacity;
 		boolean success = this.array[index] != null && this.array[index].remove(item);
-		if (success) this.size--;
+		if (success) {
+			this.size--;
+			this.changes++;
+		}
 		return success;
 	}
 
