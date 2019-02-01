@@ -243,7 +243,7 @@ public class StringHashSet {
 	 * DEFAULT_CAPACITY
 	 */
 	public void clear() {
-		// TODO: Write this. Should take 1 line if you read carefully above.
+		initialize(DEFAULT_CAPACITY);
 	}
 
 	/**
