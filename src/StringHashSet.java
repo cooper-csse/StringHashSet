@@ -40,6 +40,21 @@ public class StringHashSet {
 			return true;
 		}
 
+		boolean remove(String item) {
+			if (this.data.equals(item)) {
+				this.data = this.next != null ? this.next.data : null;
+				this.next = this.next != null ? this.next.next : null;
+				return true;
+			} else if (this.next != null) {
+				if (this.next.data.equals(item)) {
+					this.next = this.next.next;
+					return true;
+				}
+				else return this.next.remove(item);
+			}
+			return false;
+		}
+
 		boolean get(String item) {
 			if (this.data.equals(item)) return true;
 			return this.next != null && this.next.get(item);
