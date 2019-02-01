@@ -144,10 +144,9 @@ public class StringHashSet {
 	}
 
 	private void initialize(int initialCapacity) {
-		// TODO: Set the capacity to the given capacity, and initialize the
-		// other fields.
-		// Why did we pull this out into a separate method? Perhaps another
-		// method needs to initialize the hash set as well? (Hint)
+		this.size = 0;
+		this.capacity = initialCapacity;
+		this.array = new Node[this.capacity];
 	}
 
 	/**
@@ -229,16 +228,14 @@ public class StringHashSet {
 	 * @return The number of items in the hash table.
 	 */
 	public int size() {
-		// TODO: Write this
-		return -1;
+		return this.size;
 	}
 
 	/**
 	 * @return True iff the hash table contains no items.
 	 */
 	public boolean isEmpty() {
-		// TODO: Write this
-		return true;
+		return this.size == 0;
 	}
 
 	/**
@@ -246,7 +243,7 @@ public class StringHashSet {
 	 * DEFAULT_CAPACITY
 	 */
 	public void clear() {
-		// TODO: Write this. Should take 1 line if you read carefully above.
+		initialize(DEFAULT_CAPACITY);
 	}
 
 	/**
