@@ -228,8 +228,7 @@ public class StringHashSet {
 	 * @return The number of items in the hash table.
 	 */
 	public int size() {
-		// TODO: Write this
-		return -1;
+		return this.size;
 	}
 
 	/**
