@@ -1,5 +1,6 @@
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * 
@@ -13,15 +14,91 @@ public class StringHashSet {
 	// The initial size of the internal array.
 	private static final int DEFAULT_CAPACITY = 5;
 
-	// You'll want fields for the size (number of elements) and the internal
-	// array of Nodes. I also added one for the capacity (the length
-	// of the internal array).
+	private int size;
+	private int capacity;
+	private Node[] array;
 
-	private class Node {
-		// TODO: Implement this class . These are just linked-list style
-		// nodes, so you will need at least fields for the data and a reference
-		// to the next node, plus a constructor. You can choose to use a
-		// NULL_NODE at the end, or not. I chose not to do so this time.
+	static class Node implements Iterable<String> {
+		private String data;
+		private Node next;
+
+		Node() {
+			this.data = null;
+		}
+
+		Node(String data) {
+			this.data = data;
+		}
+
+		boolean add(String item) {
+			if (this.data == null) this.data = item;
+			else {
+				Node node = new Node(this.data);
+				node.next = this.next;
+				this.next = node;
+				this.data = item;
+			}
+			return true;
+		}
+
+		boolean remove(String item) {
+			if (this.data.equals(item)) {
+				this.data = this.next != null ? this.next.data : null;
+				this.next = this.next != null ? this.next.next : null;
+				return true;
+			} else if (this.next != null) {
+				if (this.next.data.equals(item)) {
+					this.next = this.next.next;
+					return true;
+				}
+				else return this.next.remove(item);
+			}
+			return false;
+		}
+
+		String pop() {
+			String data = this.data;
+			this.remove(data);
+			return data;
+		}
+
+		boolean get(String item) {
+			if (this.data.equals(item)) return true;
+			return this.next != null && this.next.get(item);
+		}
+
+		boolean moveToFront(String item) {
+			return this.remove(item) && this.add(item);
+		}
+
+		public String toString() {
+			return this.data + (this.next != null ? ", " + this.next : "");
+		}
+
+		public Iterator<String> iterator() {
+			return new NodeIterator(this);
+		}
+
+		private class NodeIterator implements Iterator<String> {
+			Node node;
+
+			NodeIterator(Node node) {
+				this.node = node;
+			}
+
+			@Override
+			public boolean hasNext() {
+				return this.node != null;
+			}
+
+			@Override
+			public String next() throws NoSuchElementException {
+				if (!this.hasNext()) throw new NoSuchElementException();
+				String data = this.node.data;
+				this.node = this.node.next;
+				return data;
+			}
+		}
 	}
 
 	/**
