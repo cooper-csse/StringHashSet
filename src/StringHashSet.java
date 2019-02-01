@@ -82,12 +82,17 @@ public class StringHashSet {
 		/**
 		 * Run through the list and check if an item exists
 		 * @param item The string being searched for in the list
-		 * @return If the search was successful
+		 * @return 0 if the search was successful, the size if it was unsuccessful
 		 */
-		boolean get(String item) {
-			if (this.data == null) return false;
-			if (this.data.equals(item)) return true;
-			return this.next != null && this.next.get(item);
+		int get(String item, int index) {
+			if (this.data == null) return 0;
+			if (this.data.equals(item)) return 0;
+			if (this.next != null) return this.next.get(item, index + 1);
+			return index;
+		}
+
+		int get(String item) {
+			return this.get(item, 1);
 		}
 
 		/**
