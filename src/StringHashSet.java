@@ -85,6 +85,7 @@ public class StringHashSet {
 		 * @return If the search was successful
 		 */
 		boolean get(String item) {
+			if (this.data == null) return false;
 			if (this.data.equals(item)) return true;
 			return this.next != null && this.next.get(item);
 		}
