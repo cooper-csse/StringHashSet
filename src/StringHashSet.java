@@ -18,6 +18,9 @@ public class StringHashSet {
 	private int capacity;
 	private Node[] array;
 
+	/**
+	 * A LinkedList<String> designed for the StringHashSet program
+	 */
 	static class Node implements Iterable<String> {
 		private String data;
 		private Node next;
@@ -30,6 +33,11 @@ public class StringHashSet {
 			this.data = data;
 		}
 
+		/**
+		 * Add a new item to the LinkedList
+		 * @param item The string to be added
+		 * @return If the add was successful
+		 */
 		boolean add(String item) {
 			if (this.data == null) this.data = item;
 			else {
@@ -41,6 +49,11 @@ public class StringHashSet {
 			return true;
 		}
 
+		/**
+		 * Remove an item from the LinkedList
+		 * @param item The string to be removed
+		 * @return If the remove was successful
+		 */
 		boolean remove(String item) {
 			if (this.data.equals(item)) {
 				this.data = this.next != null ? this.next.data : null;
@@ -56,17 +69,31 @@ public class StringHashSet {
 			return false;
 		}
 
+		/**
+		 * Remove and return the first item in the list
+		 * @return The first item of the list
+		 */
 		String pop() {
 			String data = this.data;
 			this.remove(data);
 			return data;
 		}
 
+		/**
+		 * Run through the list and check if an item exists
+		 * @param item The string being searched for in the list
+		 * @return If the search was successful
+		 */
 		boolean get(String item) {
 			if (this.data.equals(item)) return true;
 			return this.next != null && this.next.get(item);
 		}
 
+		/**
+		 * Move an item from anywhere in the list to the front
+		 * @param item The string being moved to the front
+		 * @return If the operation was successful
+		 */
 		boolean moveToFront(String item) {
 			return this.remove(item) && this.add(item);
 		}
