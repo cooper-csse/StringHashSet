@@ -60,8 +60,12 @@ public class StringHashSet {
 	 * @return The hash code for this String
 	 */
 	public static int stringHashCode(String item) {
-		// TODO: Write this.
-		return -1;
+		int hash = 0;
+		for (char c : item.toCharArray()) {
+			hash *= 31;
+			hash += c;
+		}
+		return hash;
 	}
 
 	/**
