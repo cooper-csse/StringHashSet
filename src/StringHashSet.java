@@ -197,7 +197,6 @@ public class StringHashSet {
 			if (this.size >= this.capacity * 2) {
 				StringHashSet hashSet = new StringHashSet(this.capacity * 2);
 				for (int i = 0; i < this.capacity; i++) if (this.array[i] != null) for (String s : this.array[i]) hashSet.add(s);
-				System.out.println(hashSet.toRawString());
 				this.array = hashSet.array;
 				this.capacity *= 2;
 				index = hash % this.capacity;
