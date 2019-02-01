@@ -28,6 +28,21 @@ public class StringHashSet {
 		Node(String data) {
 			this.data = data;
 		}
+
+		boolean add(String item) {
+			if (this.data == null) this.data = item;
+			else {
+				Node node = new Node(this.data);
+				node.next = this.next;
+				this.next = node;
+				this.data = item;
+			}
+			return true;
+		}
+
+		public String toString() {
+			return this.data + (this.next != null ? ", " + this.next : "");
+		}
 	}
 
 	/**
