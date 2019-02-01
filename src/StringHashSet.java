@@ -288,8 +288,9 @@ public class StringHashSet {
 	 * @return True if the hash table is modified in any way.
 	 */
 	public boolean addAll(Collection<String> collection) {
-		// TODO: Write this.
-		return true;
+		boolean success = false;
+		for (String item : collection) success |= this.add(item);
+		return success;
 	}
 
 	/**
