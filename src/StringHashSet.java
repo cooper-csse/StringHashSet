@@ -204,8 +204,19 @@ public class StringHashSet {
 	 * @return A slightly-formatted string, mostly used for debugging
 	 */
 	public String toRawString() {
-		// TODO: Write this
-		return null;
+		StringBuilder sb = new StringBuilder();
+		int index = 0;
+		for (Node list : this.array) {
+			sb.append(index++).append(": ");
+			if (list != null) {
+				for (Iterator<String> iter = list.iterator(); iter.hasNext(); ) {
+					sb.append(iter.next()).append(' ');
+					if (!iter.hasNext()) sb.append("null");
+				}
+			} else sb.append("null");
+			sb.append('\n');
+		}
+		return sb.toString();
 	}
 
 	/**
