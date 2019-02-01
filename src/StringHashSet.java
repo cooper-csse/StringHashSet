@@ -40,6 +40,11 @@ public class StringHashSet {
 			return true;
 		}
 
+		boolean get(String item) {
+			if (this.data.equals(item)) return true;
+			return this.next != null && this.next.get(item);
+		}
+
 		public String toString() {
 			return this.data + (this.next != null ? ", " + this.next : "");
 		}
