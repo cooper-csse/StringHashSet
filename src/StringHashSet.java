@@ -229,8 +229,10 @@ public class StringHashSet {
 	 * @return True if and only if the item is in the hash table.
 	 */
 	public boolean contains(String item) {
-		// TODO: Write this
-		return true;
+		int hash = StringHashSet.stringHashCode(item);
+		if (hash < 0) hash += Integer.MAX_VALUE + 1;
+		int index = hash % this.capacity;
+		return this.array[index] != null && this.array[index].moveToFront(item);
 	}
 
 	/**
