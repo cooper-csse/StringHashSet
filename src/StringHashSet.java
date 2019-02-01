@@ -188,8 +188,16 @@ public class StringHashSet {
 	 *         table was modified as a result of this call), false otherwise.
 	 */
 	public boolean add(String item) {
-		// TODO: Write this
-		return true;
+		int hash = StringHashSet.stringHashCode(item);
+		if (hash < 0) hash += Integer.MAX_VALUE + 1;
+		int index = hash % this.capacity;
+		if (this.array[index] == null) this.array[index] = new Node();
+		if (!this.array[index].get(item)) {
+			this.array[index].add(item);
+			this.size++;
+			return true;
+		}
+		return false;
 	}
 
 	/**
