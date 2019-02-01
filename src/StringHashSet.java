@@ -1,5 +1,6 @@
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * 
@@ -17,7 +18,7 @@ public class StringHashSet {
 	private int capacity;
 	private Node[] array;
 
-	static class Node {
+	static class Node implements Iterable<String> {
 		private String data;
 		private Node next;
 
@@ -72,6 +73,31 @@ public class StringHashSet {
 
 		public String toString() {
 			return this.data + (this.next != null ? ", " + this.next : "");
+		}
+
+		public Iterator<String> iterator() {
+			return new NodeIterator(this);
+		}
+
+		private class NodeIterator implements Iterator<String> {
+			Node node;
+
+			NodeIterator(Node node) {
+				this.node = node;
+			}
+
+			@Override
+			public boolean hasNext() {
+				return this.node != null;
+			}
+
+			@Override
+			public String next() throws NoSuchElementException {
+				if (!this.hasNext()) throw new NoSuchElementException();
+				String data = this.node.data;
+				this.node = this.node.next;
+				return data;
+			}
 		}
 	}
 
