@@ -193,6 +193,15 @@ public class StringHashSet {
 		int index = hash % this.capacity;
 		if (this.array[index] == null) this.array[index] = new Node();
 		if (!this.array[index].get(item)) {
+			if (this.size >= this.capacity * 2) {
+				StringHashSet hashSet = new StringHashSet(this.capacity * 2);
+				for (int i = 0; i < this.capacity; i++) if (this.array[i] != null) for (String s : this.array[i]) hashSet.add(s);
+				System.out.println(hashSet.toRawString());
+				this.array = hashSet.array;
+				this.capacity *= 2;
+				index = hash % this.capacity;
+				if (this.array[index] == null) this.array[index] = new Node();
+			}
 			this.array[index].add(item);
 			this.size++;
 			return true;
