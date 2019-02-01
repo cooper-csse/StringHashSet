@@ -277,8 +277,12 @@ public class StringHashSet {
 	 *         table changed as a result).
 	 */
 	public boolean remove(String item) {
-		// TODO: Write this.
-		return true;
+		int hash = StringHashSet.stringHashCode(item);
+		if (hash < 0) hash += Integer.MAX_VALUE + 1;
+		int index = hash % this.capacity;
+		boolean success = this.array[index] != null && this.array[index].remove(item);
+		if (success) this.size--;
+		return success;
 	}
 
 	/**
