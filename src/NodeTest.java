@@ -37,6 +37,7 @@ public class NodeTest {
 		assertTrue("Find item 'five'", numbers.get("five"));
 		assertFalse("Find item 'six'", numbers.get("six"));
 		assertFalse("Find item 'null'", numbers.get(null));
+		assertFalse("Find item on empty list", new StringHashSet.Node().get("seven"));
 	}
 
 	@Test
