@@ -235,8 +235,7 @@ public class StringHashSet {
 	 * @return True iff the hash table contains no items.
 	 */
 	public boolean isEmpty() {
-		// TODO: Write this
-		return true;
+		return this.size == 0;
 	}
 
 	/**
