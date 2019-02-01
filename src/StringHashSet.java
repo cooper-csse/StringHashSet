@@ -13,15 +13,21 @@ public class StringHashSet {
 	// The initial size of the internal array.
 	private static final int DEFAULT_CAPACITY = 5;
 
-	// You'll want fields for the size (number of elements) and the internal
-	// array of Nodes. I also added one for the capacity (the length
-	// of the internal array).
+	private int size;
+	private int capacity;
+	private Node[] array;
 
-	private class Node {
-		// TODO: Implement this class . These are just linked-list style
-		// nodes, so you will need at least fields for the data and a reference
-		// to the next node, plus a constructor. You can choose to use a
-		// NULL_NODE at the end, or not. I chose not to do so this time.
+	static class Node {
+		private String data;
+		private Node next;
+
+		Node() {
+			this.data = null;
+		}
+
+		Node(String data) {
+			this.data = data;
+		}
 	}
 
 	/**
