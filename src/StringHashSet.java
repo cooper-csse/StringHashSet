@@ -66,6 +66,10 @@ public class StringHashSet {
 			return this.next != null && this.next.get(item);
 		}
 
+		boolean moveToFront(String item) {
+			return this.remove(item) && this.add(item);
+		}
+
 		public String toString() {
 			return this.data + (this.next != null ? ", " + this.next : "");
 		}
