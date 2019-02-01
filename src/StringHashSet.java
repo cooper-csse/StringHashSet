@@ -55,6 +55,12 @@ public class StringHashSet {
 			return false;
 		}
 
+		String pop() {
+			String data = this.data;
+			this.remove(data);
+			return data;
+		}
+
 		boolean get(String item) {
 			if (this.data.equals(item)) return true;
 			return this.next != null && this.next.get(item);
