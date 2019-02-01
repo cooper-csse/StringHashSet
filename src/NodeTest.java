@@ -30,14 +30,14 @@ public class NodeTest {
 	@Test
 	public void testGet() {
 		populateNumbers();
-		assertEquals("Find item 'one'", 0, numbers.get("one"));
-		assertEquals("Find item 'two'", 0, numbers.get("two"));
-		assertEquals("Find item 'three'", 0, numbers.get("three"));
-		assertEquals("Find item 'four'", 0, numbers.get("four"));
-		assertEquals("Find item 'five'", 0, numbers.get("five"));
-		assertEquals("Find item 'six'", 5, numbers.get("six"));
-		assertEquals("Find item 'null'", 5, numbers.get(null));
-		assertEquals("Find item on empty list", 0, new StringHashSet.Node().get("seven"));
+		assertTrue("Find item 'one'", numbers.get("one"));
+		assertTrue("Find item 'two'", numbers.get("two"));
+		assertTrue("Find item 'three'", numbers.get("three"));
+		assertTrue("Find item 'four'", numbers.get("four"));
+		assertTrue("Find item 'five'", numbers.get("five"));
+		assertFalse("Find item 'six'", numbers.get("six"));
+		assertFalse("Find item 'null'", numbers.get(null));
+		assertFalse("Find item on empty list", new StringHashSet.Node().get("seven"));
 	}
 
 	@Test

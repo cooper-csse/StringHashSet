@@ -3,7 +3,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * 
+ *
  * A hash set implementation for Strings. Cannot insert null into the set. Other
  * requirements are given with each method.
  *
@@ -82,17 +82,12 @@ public class StringHashSet {
 		/**
 		 * Run through the list and check if an item exists
 		 * @param item The string being searched for in the list
-		 * @return 0 if the search was successful, the size if it was unsuccessful
+		 * @return If the search was successful
 		 */
-		int get(String item, int index) {
-			if (this.data == null) return 0;
-			if (this.data.equals(item)) return 0;
-			if (this.next != null) return this.next.get(item, index + 1);
-			return index;
-		}
-
-		int get(String item) {
-			return this.get(item, 1);
+		boolean get(String item) {
+			if (this.data == null) return false;
+			if (this.data.equals(item)) return true;
+			return this.next != null && this.next.get(item);
 		}
 
 		/**
@@ -180,7 +175,7 @@ public class StringHashSet {
 	/**
 	 * Adds a new node if it is not there already. If there is a collision, then
 	 * add a new node to the -front- of the linked list.
-	 * 
+	 *
 	 * Must operate in amortized O(1) time, assuming a good hashcode function.
 	 *
 	 * If the number of nodes in the hash table would be over double the
@@ -205,7 +200,7 @@ public class StringHashSet {
 	 * null". Use a StringBuilder, so you can build the string in O(n) time.
 	 * (Repeatedly concatenating n strings onto a growing string gives O(n^2)
 	 * time)
-	 * 
+	 *
 	 * @return A slightly-formatted string, mostly used for debugging
 	 */
 	public String toRawString() {
@@ -214,9 +209,9 @@ public class StringHashSet {
 	}
 
 	/**
-	 * 
+	 *
 	 * Checks if the given item is in the hash table.
-	 * 
+	 *
 	 * Must operate in O(1) time, assuming a good hashcode function.
 	 *
 	 * @param item
@@ -255,7 +250,7 @@ public class StringHashSet {
 	/**
 	 * Removes the given item from the hash table if it is there. You do NOT
 	 * need to resize down if the load factor decreases below the threshold.
-	 * 
+	 *
 	 * @param item
 	 * @return True If the item was in the hash table (or equivalently, if the
 	 *         table changed as a result).
@@ -277,7 +272,7 @@ public class StringHashSet {
 	}
 
 	/**
-	 * 
+	 *
 	 * Challenge Feature: Returns an iterator over the set. Return the items in
 	 * any order that you can do efficiently. Should throw a
 	 * NoSuchElementException if there are no more items and next() is called.
