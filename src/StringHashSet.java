@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
  *
  * @author Matt Boutell and <<TODO: your name here >>>. Created Oct 6, 2014.
  */
-public class StringHashSet {
+public class StringHashSet implements Iterable<String> {
 
 	// The initial size of the internal array.
 	private static final int DEFAULT_CAPACITY = 5;
