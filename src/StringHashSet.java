@@ -1,4 +1,5 @@
 import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -322,7 +323,7 @@ public class StringHashSet {
 	 * @return an iterator.
 	 */
 	public Iterator<String> iterator() {
-		return null;
+		return new HashSetIterator(this);
 	}
 
 	// Challenge Feature: If you have an iterator, this is easy. Use a
@@ -332,5 +333,47 @@ public class StringHashSet {
 	@Override
 	public String toString() {
 		return null;
+	}
+
+	private class HashSetIterator implements Iterator<String> {
+		StringHashSet hashSet;
+		Iterator<String> iter;
+		int index = -1;
+		int changes;
+
+		HashSetIterator(StringHashSet hashSet) {
+			this.hashSet = hashSet;
+			this.changes = hashSet.changes;
+		}
+
+		@Override
+		public boolean hasNext() throws ConcurrentModificationException {
+			if (this.changes != this.hashSet.changes) throw new ConcurrentModificationException();
+			if (this.iter != null && this.iter.hasNext()) return true;
+			for (int i = this.index + 1; i < this.hashSet.capacity; i++) {
+				System.out.println(i);
+				if (this.hashSet.array[i] != null && this.hashSet.array[i].data != null) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		@Override
+		public String next() throws NoSuchElementException, ConcurrentModificationException {
+			if (this.changes != this.hashSet.changes) throw new ConcurrentModificationException();
+			if (this.iter != null) {
+				System.out.println(this.iter.hasNext());
+				System.out.println(this.hasNext());
+				if (!this.iter.hasNext() && !this.hasNext()) throw new NoSuchElementException();
+				if (this.iter.hasNext()) return this.iter.next();
+			}
+			for (int i = this.index + 1; i < this.hashSet.capacity; i++) if (this.hashSet.array[i] != null && this.hashSet.array[i].data != null) {
+				this.index = i;
+				break;
+			}
+			this.iter = this.hashSet.array[index].iterator();
+			return this.iter.next();
+		}
 	}
 }
