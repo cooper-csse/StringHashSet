@@ -1,15 +1,16 @@
 import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * 
+ *
  * A hash set implementation for Strings. Cannot insert null into the set. Other
  * requirements are given with each method.
  *
  * @author Matt Boutell and <<TODO: your name here >>>. Created Oct 6, 2014.
  */
-public class StringHashSet {
+public class StringHashSet implements Iterable<String> {
 
 	// The initial size of the internal array.
 	private static final int DEFAULT_CAPACITY = 5;
@@ -17,6 +18,7 @@ public class StringHashSet {
 	private int size;
 	private int capacity;
 	private Node[] array;
+	private int changes;
 
 	/**
 	 * A LinkedList<String> designed for the StringHashSet program
@@ -85,6 +87,7 @@ public class StringHashSet {
 		 * @return If the search was successful
 		 */
 		boolean get(String item) {
+			if (this.data == null) return false;
 			if (this.data.equals(item)) return true;
 			return this.next != null && this.next.get(item);
 		}
@@ -144,10 +147,10 @@ public class StringHashSet {
 	}
 
 	private void initialize(int initialCapacity) {
-		// TODO: Set the capacity to the given capacity, and initialize the
-		// other fields.
-		// Why did we pull this out into a separate method? Perhaps another
-		// method needs to initialize the hash set as well? (Hint)
+		this.size = 0;
+		this.capacity = initialCapacity;
+		this.array = new Node[this.capacity];
+		this.changes++;
 	}
 
 	/**
@@ -175,7 +178,7 @@ public class StringHashSet {
 	/**
 	 * Adds a new node if it is not there already. If there is a collision, then
 	 * add a new node to the -front- of the linked list.
-	 * 
+	 *
 	 * Must operate in amortized O(1) time, assuming a good hashcode function.
 	 *
 	 * If the number of nodes in the hash table would be over double the
@@ -188,8 +191,25 @@ public class StringHashSet {
 	 *         table was modified as a result of this call), false otherwise.
 	 */
 	public boolean add(String item) {
-		// TODO: Write this
-		return true;
+		int hash = StringHashSet.stringHashCode(item);
+		if (hash < 0) hash += Integer.MAX_VALUE + 1;
+		int index = hash % this.capacity;
+		if (this.array[index] == null) this.array[index] = new Node();
+		if (!this.array[index].get(item)) {
+			if (this.size >= this.capacity * 2) {
+				StringHashSet hashSet = new StringHashSet(this.capacity * 2);
+				for (int i = 0; i < this.capacity; i++) if (this.array[i] != null) for (String s : this.array[i]) hashSet.add(s);
+				this.array = hashSet.array;
+				this.capacity *= 2;
+				index = hash % this.capacity;
+				if (this.array[index] == null) this.array[index] = new Node();
+			}
+			this.array[index].add(item);
+			this.size++;
+			this.changes++;
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -200,26 +220,39 @@ public class StringHashSet {
 	 * null". Use a StringBuilder, so you can build the string in O(n) time.
 	 * (Repeatedly concatenating n strings onto a growing string gives O(n^2)
 	 * time)
-	 * 
+	 *
 	 * @return A slightly-formatted string, mostly used for debugging
 	 */
 	public String toRawString() {
-		// TODO: Write this
-		return null;
+		StringBuilder sb = new StringBuilder();
+		int index = 0;
+		for (Node list : this.array) {
+			sb.append(index++).append(": ");
+			if (list != null) {
+				for (Iterator<String> iter = list.iterator(); iter.hasNext(); ) {
+					sb.append(iter.next()).append(' ');
+					if (!iter.hasNext()) sb.append("null");
+				}
+			} else sb.append("null");
+			sb.append('\n');
+		}
+		return sb.toString();
 	}
 
 	/**
-	 * 
+	 *
 	 * Checks if the given item is in the hash table.
-	 * 
+	 *
 	 * Must operate in O(1) time, assuming a good hashcode function.
 	 *
 	 * @param item
 	 * @return True if and only if the item is in the hash table.
 	 */
 	public boolean contains(String item) {
-		// TODO: Write this
-		return true;
+		int hash = StringHashSet.stringHashCode(item);
+		if (hash < 0) hash += Integer.MAX_VALUE + 1;
+		int index = hash % this.capacity;
+		return this.array[index] != null && this.array[index].moveToFront(item);
 	}
 
 	/**
@@ -229,16 +262,14 @@ public class StringHashSet {
 	 * @return The number of items in the hash table.
 	 */
 	public int size() {
-		// TODO: Write this
-		return -1;
+		return this.size;
 	}
 
 	/**
 	 * @return True iff the hash table contains no items.
 	 */
 	public boolean isEmpty() {
-		// TODO: Write this
-		return true;
+		return this.size == 0;
 	}
 
 	/**
@@ -246,20 +277,27 @@ public class StringHashSet {
 	 * DEFAULT_CAPACITY
 	 */
 	public void clear() {
-		// TODO: Write this. Should take 1 line if you read carefully above.
+		initialize(DEFAULT_CAPACITY);
 	}
 
 	/**
 	 * Removes the given item from the hash table if it is there. You do NOT
 	 * need to resize down if the load factor decreases below the threshold.
-	 * 
+	 *
 	 * @param item
 	 * @return True If the item was in the hash table (or equivalently, if the
 	 *         table changed as a result).
 	 */
 	public boolean remove(String item) {
-		// TODO: Write this.
-		return true;
+		int hash = StringHashSet.stringHashCode(item);
+		if (hash < 0) hash += Integer.MAX_VALUE + 1;
+		int index = hash % this.capacity;
+		boolean success = this.array[index] != null && this.array[index].remove(item);
+		if (success) {
+			this.size--;
+			this.changes++;
+		}
+		return success;
 	}
 
 	/**
@@ -269,12 +307,13 @@ public class StringHashSet {
 	 * @return True if the hash table is modified in any way.
 	 */
 	public boolean addAll(Collection<String> collection) {
-		// TODO: Write this.
-		return true;
+		boolean success = false;
+		for (String item : collection) success |= this.add(item);
+		return success;
 	}
 
 	/**
-	 * 
+	 *
 	 * Challenge Feature: Returns an iterator over the set. Return the items in
 	 * any order that you can do efficiently. Should throw a
 	 * NoSuchElementException if there are no more items and next() is called.
@@ -284,7 +323,7 @@ public class StringHashSet {
 	 * @return an iterator.
 	 */
 	public Iterator<String> iterator() {
-		return null;
+		return new HashSetIterator(this);
 	}
 
 	// Challenge Feature: If you have an iterator, this is easy. Use a
@@ -293,6 +332,46 @@ public class StringHashSet {
 	// Format it like any other Collection's toString (like [a, b, c])
 	@Override
 	public String toString() {
-		return null;
+		StringBuilder sb = new StringBuilder("[");
+		for (Iterator<String> iter = this.iterator(); iter.hasNext(); ) {
+			sb.append(iter.next());
+			if (iter.hasNext()) sb.append(", ");
+		}
+		return sb.append(']').toString();
+	}
+
+	private class HashSetIterator implements Iterator<String> {
+		StringHashSet hashSet;
+		Iterator<String> iter;
+		int index = -1;
+		int changes;
+
+		HashSetIterator(StringHashSet hashSet) {
+			this.hashSet = hashSet;
+			this.changes = hashSet.changes;
+		}
+
+		@Override
+		public boolean hasNext() throws ConcurrentModificationException {
+			if (this.changes != this.hashSet.changes) throw new ConcurrentModificationException();
+			if (this.iter != null && this.iter.hasNext()) return true;
+			for (int i = this.index + 1; i < this.hashSet.capacity; i++) if (this.hashSet.array[i] != null && this.hashSet.array[i].data != null) return true;
+			return false;
+		}
+
+		@Override
+		public String next() throws NoSuchElementException, ConcurrentModificationException {
+			if (this.changes != this.hashSet.changes) throw new ConcurrentModificationException();
+			if (this.iter != null) {
+				if (!this.iter.hasNext() && !this.hasNext()) throw new NoSuchElementException();
+				if (this.iter.hasNext()) return this.iter.next();
+			}
+			for (int i = this.index + 1; i < this.hashSet.capacity; i++) if (this.hashSet.array[i] != null && this.hashSet.array[i].data != null) {
+				this.index = i;
+				break;
+			}
+			this.iter = this.hashSet.array[index].iterator();
+			return this.iter.next();
+		}
 	}
 }
