@@ -149,6 +149,7 @@ public class StringHashSet {
 		this.size = 0;
 		this.capacity = initialCapacity;
 		this.array = new Node[this.capacity];
+		this.changes++;
 	}
 
 	/**
