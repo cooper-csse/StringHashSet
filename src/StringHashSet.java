@@ -332,7 +332,12 @@ public class StringHashSet implements Iterable<String> {
 	// Format it like any other Collection's toString (like [a, b, c])
 	@Override
 	public String toString() {
-		return null;
+		StringBuilder sb = new StringBuilder("[");
+		for (Iterator<String> iter = this.iterator(); iter.hasNext(); ) {
+			sb.append(iter.next());
+			if (iter.hasNext()) sb.append(", ");
+		}
+		return sb.append(']').toString();
 	}
 
 	private class HashSetIterator implements Iterator<String> {
@@ -350,12 +355,7 @@ public class StringHashSet implements Iterable<String> {
 		public boolean hasNext() throws ConcurrentModificationException {
 			if (this.changes != this.hashSet.changes) throw new ConcurrentModificationException();
 			if (this.iter != null && this.iter.hasNext()) return true;
-			for (int i = this.index + 1; i < this.hashSet.capacity; i++) {
-				System.out.println(i);
-				if (this.hashSet.array[i] != null && this.hashSet.array[i].data != null) {
-					return true;
-				}
-			}
+			for (int i = this.index + 1; i < this.hashSet.capacity; i++) if (this.hashSet.array[i] != null && this.hashSet.array[i].data != null) return true;
 			return false;
 		}
 
@@ -363,8 +363,6 @@ public class StringHashSet implements Iterable<String> {
 		public String next() throws NoSuchElementException, ConcurrentModificationException {
 			if (this.changes != this.hashSet.changes) throw new ConcurrentModificationException();
 			if (this.iter != null) {
-				System.out.println(this.iter.hasNext());
-				System.out.println(this.hasNext());
 				if (!this.iter.hasNext() && !this.hasNext()) throw new NoSuchElementException();
 				if (this.iter.hasNext()) return this.iter.next();
 			}
