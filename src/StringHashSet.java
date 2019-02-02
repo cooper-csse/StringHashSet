@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
  * A hash set implementation for Strings. Cannot insert null into the set. Other
  * requirements are given with each method.
  *
- * @author Matt Boutell and <<TODO: your name here >>>. Created Oct 6, 2014.
+ * @author Matt Boutell and Cooper Anderson (andersc7). Created Oct 6, 2014.
  */
 public class StringHashSet implements Iterable<String> {
 
